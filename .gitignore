@@ -1,0 +1,12 @@
+# Environment files
+.env
+.env.*
+*.env
+
+# JSON files
+*.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
