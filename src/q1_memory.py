@@ -1,16 +1,16 @@
 """
-Q1 - Top 10 fechas con más tweets (Optimizado por MEMORIA)
+Q1 - Top 10 dates with most tweets (MEMORY optimized)
 
-Estrategia:
-- Leer el archivo línea a línea (streaming) para evitar cargar todo en RAM.
-- Usar Counter para contar tweets por fecha.
-- Usar defaultdict(Counter) para contar tweets por (fecha, usuario).
-- Solo mantener en memoria los contadores, no los tweets completos.
+Strategy:
+- Read file line by line (streaming) to avoid loading everything into RAM.
+- Use Counter to count tweets per date.
+- Use defaultdict(Counter) to count tweets per (date, user).
+- Only counters are kept in memory, not the full tweets.
 
-Supuestos:
-- El archivo es un JSON lines (un JSON por línea).
-- El campo "date" contiene un string ISO 8601 del cual tomamos los primeros 10 chars.
-- El campo "user" es un dict con key "username".
+Assumptions:
+- File is JSON Lines (one JSON object per line).
+- The "date" field contains an ISO 8601 string; we take the first 10 chars.
+- The "user" field is a dict with a "username" key.
 """
 
 from typing import List, Tuple
@@ -23,7 +23,7 @@ logger = get_logger(__name__)
 
 
 def q1_memory(file_path: str) -> List[Tuple[datetime.date, str]]:
-    logger.info("Iniciando q1_memory — lectura streaming")
+    logger.info("Starting q1_memory -- streaming read")
     date_counts: Counter = Counter()
     date_user_counts: dict[str, Counter] = defaultdict(Counter)
     line_count = 0
@@ -34,6 +34,8 @@ def q1_memory(file_path: str) -> List[Tuple[datetime.date, str]]:
             if not line:
                 continue
             tweet = json.loads(line)
+            # Extract date (YYYY-MM-DD) directly from string to avoid
+            # the overhead of parsing the full datetime
             date_str = tweet["date"][:10]
             username = tweet["user"]["username"]
 
@@ -41,9 +43,9 @@ def q1_memory(file_path: str) -> List[Tuple[datetime.date, str]]:
             date_user_counts[date_str][username] += 1
             line_count += 1
 
-    logger.info(f"Procesados {line_count} tweets en streaming")
+    logger.info(f"Processed {line_count} tweets via streaming")
 
-    # Top 10 fechas
+    # Top 10 dates
     top_dates = date_counts.most_common(10)
 
     result = []
@@ -52,5 +54,5 @@ def q1_memory(file_path: str) -> List[Tuple[datetime.date, str]]:
         date_obj = datetime.strptime(date_str, "%Y-%m-%d").date()
         result.append((date_obj, top_user))
 
-    logger.info(f"q1_memory completado — {len(result)} resultados")
+    logger.info(f"q1_memory completed -- {len(result)} results")
     return result

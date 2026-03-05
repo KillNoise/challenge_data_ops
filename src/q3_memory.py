@@ -1,14 +1,14 @@
 """
-Q3 - Top 10 usuarios más mencionados (Optimizado por MEMORIA)
+Q3 - Top 10 most mentioned users (MEMORY optimized)
 
-Estrategia:
-- Leer línea a línea (streaming).
-- Extraer menciones con regex @(\w+) del campo content.
-- Acumular en Counter (bajo uso de memoria).
+Strategy:
+- Read file line by line (streaming).
+- Extract mentions with regex @(\\w+) from the content field.
+- Accumulate in a single Counter (low memory usage).
 
-Supuestos:
-- Las menciones siguen el formato @username en el contenido del tweet.
-- Se usa regex sobre content para máxima eficiencia.
+Assumptions:
+- Mentions follow the @username format in the tweet content.
+- Regex is used on content for maximum efficiency.
 """
 
 from typing import List, Tuple
@@ -21,7 +21,7 @@ logger = get_logger(__name__)
 
 
 def q3_memory(file_path: str) -> List[Tuple[str, int]]:
-    logger.info("Iniciando q3_memory — lectura streaming")
+    logger.info("Starting q3_memory -- streaming read")
     mention_counter: Counter = Counter()
     line_count = 0
 
@@ -38,7 +38,5 @@ def q3_memory(file_path: str) -> List[Tuple[str, int]]:
             mention_counter.update(mentions)
             line_count += 1
 
-    logger.info(
-        f"Procesados {line_count} tweets — {len(mention_counter)} usuarios únicos"
-    )
+    logger.info(f"Processed {line_count} tweets -- {len(mention_counter)} unique users")
     return mention_counter.most_common(10)

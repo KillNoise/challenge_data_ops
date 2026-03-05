@@ -1,15 +1,15 @@
 """
-Q2 - Top 10 emojis mas usados (Optimizado por TIEMPO)
+Q2 - Top 10 most used emojis (TIME optimized)
 
-Estrategia:
-- Leer todo el archivo de una vez en memoria (I/O rapido).
-- Parsear cada linea con orjson (parser en Rust, ~5x mas rapido que json stdlib).
-- Extraer emojis con emoji.emoji_list().
-- Prioriza velocidad sobre uso de memoria.
+Strategy:
+- Read entire file at once into memory (fast bulk I/O).
+- Parse each line with orjson (Rust-based parser, ~5x faster than json stdlib).
+- Extract emojis using emoji.emoji_list().
+- Prioritizes speed over memory usage.
 
-Diferencia vs q2_memory:
-- orjson vs json stdlib (parser mas rapido)
-- Lectura bulk vs streaming (I/O mas rapido)
+Difference vs q2_memory:
+- orjson vs json stdlib (faster parser)
+- Bulk read vs streaming (faster I/O)
 """
 
 from typing import List, Tuple
@@ -22,12 +22,12 @@ logger = get_logger(__name__)
 
 
 def q2_time(file_path: str) -> List[Tuple[str, int]]:
-    logger.info("Iniciando q2_time -- lectura bulk + orjson")
+    logger.info("Starting q2_time -- bulk read + orjson")
 
     with open(file_path, "rb") as f:
         raw_lines = f.readlines()
 
-    logger.info(f"Leidas {len(raw_lines)} lineas en bulk")
+    logger.info(f"Read {len(raw_lines)} lines in bulk")
 
     emoji_counter: Counter = Counter()
 
@@ -42,5 +42,5 @@ def q2_time(file_path: str) -> List[Tuple[str, int]]:
         for e in emojis:
             emoji_counter[e["emoji"]] += 1
 
-    logger.info(f"q2_time completado -- {len(emoji_counter)} emojis unicos encontrados")
+    logger.info(f"q2_time completed -- {len(emoji_counter)} unique emojis found")
     return emoji_counter.most_common(10)

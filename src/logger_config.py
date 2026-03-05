@@ -1,9 +1,9 @@
 """
-Módulo centralizado de configuración de logging para el challenge.
+Centralized logging configuration module for the challenge.
 
-Formato de log: YYYY-MM-DD HH-MM-SS [FILENAME] MESSAGE
+Log format: YYYY-MM-DD HH:MM:SS [FILENAME] - LEVEL - MESSAGE
 
-Uso:
+Usage:
     from logger_config import get_logger
     logger = get_logger(__name__)
     logger.info("Processing started")
@@ -14,31 +14,31 @@ import logging
 
 def get_logger(name: str, level: int = logging.INFO) -> logging.Logger:
     """
-    Crea y retorna un logger configurado con el formato del proyecto.
+    Creates and returns a logger configured with the project format.
 
     Args:
-        name: Nombre del módulo (usar __name__).
-        level: Nivel de logging (default: INFO).
+        name: Module name (use __name__).
+        level: Logging level (default: INFO).
 
     Returns:
-        Logger configurado.
+        Configured logger instance.
     """
     logger = logging.getLogger(name)
 
-    # Evitar agregar handlers duplicados si se llama varias veces
+    # Avoid adding duplicate handlers if called multiple times
     if logger.handlers:
         return logger
 
     logger.setLevel(level)
 
-    # Formato: YYYY-MM-DD HH-MM-SS [FILENAME] MESSAGE
-    # Se usa %(filename)s para obtener automáticamente el nombre del archivo
+    # Format: YYYY-MM-DD HH:MM:SS [FILENAME] - LEVEL - MESSAGE
+    # %(filename)s automatically resolves to the calling file's name
     formatter = logging.Formatter(
         fmt="%(asctime)s [%(filename)s] - %(levelname)s - %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
 
-    # Handler para consola
+    # Console handler
     console_handler = logging.StreamHandler()
     console_handler.setLevel(level)
     console_handler.setFormatter(formatter)

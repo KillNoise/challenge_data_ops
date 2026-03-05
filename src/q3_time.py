@@ -1,16 +1,16 @@
 """
-Q3 - Top 10 usuarios mas mencionados (Optimizado por TIEMPO)
+Q3 - Top 10 most mentioned users (TIME optimized)
 
-Estrategia:
-- Leer todo el archivo de una vez en memoria (I/O rapido).
-- Parsear cada linea con orjson (parser en Rust, ~5x mas rapido que json stdlib).
-- Extraer menciones con regex compilado.
-- Prioriza velocidad sobre uso de memoria.
+Strategy:
+- Read entire file at once into memory (fast bulk I/O).
+- Parse each line with orjson (Rust-based parser, ~5x faster than json stdlib).
+- Extract mentions with pre-compiled regex.
+- Prioritizes speed over memory usage.
 
-Diferencia vs q3_memory:
-- orjson vs json stdlib (parser mas rapido)
-- Lectura bulk vs streaming (I/O mas rapido)
-- Regex pre-compilado para max velocidad
+Difference vs q3_memory:
+- orjson vs json stdlib (faster parser)
+- Bulk read vs streaming (faster I/O)
+- Pre-compiled regex for max speed
 """
 
 from typing import List, Tuple
@@ -21,17 +21,17 @@ from logger_config import get_logger
 
 logger = get_logger(__name__)
 
-# Pre-compilar regex fuera de la funcion para max performance
+# Pre-compile regex outside the function for max performance
 MENTION_PATTERN = re.compile(r"@(\w+)")
 
 
 def q3_time(file_path: str) -> List[Tuple[str, int]]:
-    logger.info("Iniciando q3_time -- lectura bulk + orjson")
+    logger.info("Starting q3_time -- bulk read + orjson")
 
     with open(file_path, "rb") as f:
         raw_lines = f.readlines()
 
-    logger.info(f"Leidas {len(raw_lines)} lineas en bulk")
+    logger.info(f"Read {len(raw_lines)} lines in bulk")
 
     mention_counter: Counter = Counter()
 
@@ -45,7 +45,5 @@ def q3_time(file_path: str) -> List[Tuple[str, int]]:
         mentions = MENTION_PATTERN.findall(content)
         mention_counter.update(mentions)
 
-    logger.info(
-        f"q3_time completado -- {len(mention_counter)} usuarios unicos mencionados"
-    )
+    logger.info(f"q3_time completed -- {len(mention_counter)} unique users mentioned")
     return mention_counter.most_common(10)

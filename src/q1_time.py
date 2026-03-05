@@ -1,15 +1,15 @@
 """
-Q1 - Top 10 fechas con mas tweets (Optimizado por TIEMPO)
+Q1 - Top 10 dates with most tweets (TIME optimized)
 
-Estrategia:
-- Leer todo el archivo de una vez en memoria (I/O rapido).
-- Parsear cada linea con orjson (parser en Rust, ~5x mas rapido que json stdlib).
-- Usar Counter para conteo rapido.
-- Prioriza velocidad sobre uso de memoria.
+Strategy:
+- Read entire file at once into memory (fast bulk I/O).
+- Parse each line with orjson (Rust-based parser, ~5x faster than json stdlib).
+- Use Counter for fast aggregation.
+- Prioritizes speed over memory usage.
 
-Diferencia vs q1_memory:
-- orjson vs json stdlib (parser mas rapido)
-- Lectura bulk vs streaming (I/O mas rapido)
+Difference vs q1_memory:
+- orjson vs json stdlib (faster parser)
+- Bulk read vs streaming (faster I/O)
 """
 
 from typing import List, Tuple
@@ -22,13 +22,13 @@ logger = get_logger(__name__)
 
 
 def q1_time(file_path: str) -> List[Tuple[datetime.date, str]]:
-    logger.info("Iniciando q1_time -- lectura bulk + orjson")
+    logger.info("Starting q1_time -- bulk read + orjson")
 
-    # Leer todo el archivo de una vez (mas rapido que linea a linea)
+    # Read entire file at once (faster than line-by-line)
     with open(file_path, "rb") as f:
         raw_lines = f.readlines()
 
-    logger.info(f"Leidas {len(raw_lines)} lineas en bulk")
+    logger.info(f"Read {len(raw_lines)} lines in bulk")
 
     date_counts: Counter = Counter()
     date_user_counts: dict[str, Counter] = defaultdict(Counter)
@@ -43,7 +43,7 @@ def q1_time(file_path: str) -> List[Tuple[datetime.date, str]]:
         date_counts[date_str] += 1
         date_user_counts[date_str][username] += 1
 
-    # Top 10 fechas
+    # Top 10 dates
     top_dates = date_counts.most_common(10)
 
     result = []
@@ -52,5 +52,5 @@ def q1_time(file_path: str) -> List[Tuple[datetime.date, str]]:
         date_obj = datetime.strptime(date_str, "%Y-%m-%d").date()
         result.append((date_obj, top_user))
 
-    logger.info(f"q1_time completado -- {len(result)} resultados")
+    logger.info(f"q1_time completed -- {len(result)} results")
     return result
