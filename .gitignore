@@ -10,3 +10,9 @@
 __pycache__/
 *.py[cod]
 *.pyc
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
