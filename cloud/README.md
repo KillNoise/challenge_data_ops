@@ -3,10 +3,19 @@
 ## Arquitectura
 
 ```
-JSON file --> GCS Bucket --> BigQuery Table --> SQL Queries (Q1, Q2, Q3)
+JSON file --> GCS Bucket --[Cloud Function]--> BigQuery Table --> SQL Queries (Q1, Q2, Q3)
 ```
 
 Toda la infraestructura se provisiona con **Terraform** (IaC). No se almacenan credenciales en el codigo.
+
+### Pipeline Event-Driven
+
+Al subir un archivo JSON al bucket GCS, una **Cloud Function (Gen2)** se dispara automaticamente via **Eventarc** y:
+1. Valida que el archivo este en el prefijo `raw/` y sea `.json`
+2. Carga los datos en BigQuery con schema auto-detectado
+3. Loguea el resultado (filas cargadas)
+
+Esto elimina la necesidad de ejecutar `load_data.sh` manualmente — el pipeline es completamente automatizado.
 
 ## Prerequisitos
 

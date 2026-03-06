@@ -17,3 +17,8 @@ output "service_account_email" {
   description = "Service account email"
   value       = google_service_account.challenge_sa.email
 }
+
+output "cloud_function_name" {
+  description = "Cloud Function name"
+  value       = google_cloudfunctions2_function.load_to_bq.name
+}

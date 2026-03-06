@@ -36,8 +36,9 @@ Cada problema se implemento con **2 enfoques**:
 
 Implementacion en **GCP con BigQuery + Terraform**:
 
-- Infraestructura como codigo (Terraform): GCS bucket, BigQuery dataset/tabla, Service Account
-- Script de carga: JSON → GCS → BigQuery
+- Infraestructura como codigo (Terraform): GCS bucket, BigQuery dataset/tabla, Service Account, Cloud Function
+- **Pipeline event-driven**: Cloud Function (Gen2) se dispara automaticamente al subir un JSON a GCS y lo carga en BigQuery
+- Script de carga manual (`load_data.sh`) como alternativa
 - Queries SQL para los 3 problemas
 
 > En BigQuery el tradeoff tiempo vs memoria no aplica -- es serverless y una sola query SQL resuelve cada problema.
@@ -53,7 +54,7 @@ Ver [cloud/README.md](cloud/README.md) para el paso a paso completo.
 ├── verify.py
 ├── src/
 │   ├── challenge.ipynb
-│   ├── analisis.md
+│   ├── README.md
 │   ├── logger_config.py
 │   ├── q1_time.py
 │   ├── q1_memory.py
@@ -67,6 +68,9 @@ Ver [cloud/README.md](cloud/README.md) para el paso a paso completo.
     ├── variables.tf
     ├── outputs.tf
     ├── load_data.sh
+    ├── function/
+    │   ├── main.py
+    │   └── requirements.txt
     └── queries/
         ├── q1_top_dates.sql
         ├── q2_top_emojis.sql
